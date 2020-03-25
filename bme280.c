@@ -380,7 +380,7 @@ int8_t bme280_init(struct bme280_dev *dev)
             }
 
             /* Wait for 1 ms */
-            dev->delay_ms(1);
+            dev->delay_ms(1, dev->ctx);
             --try_count;
         }
 
@@ -414,7 +414,7 @@ int8_t bme280_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t len, const 
         }
 
         /* Read the data  */
-        rslt = dev->read(dev->dev_id, reg_addr, reg_data, len);
+        rslt = dev->read(dev->dev_id, reg_addr, reg_data, len, dev->ctx);
 
         /* Check for communication error */
         if (rslt != BME280_OK)
@@ -474,7 +474,7 @@ int8_t bme280_set_regs(uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, 
             {
                 temp_len = len;
             }
-            rslt = dev->write(dev->dev_id, reg_addr[0], temp_buff, temp_len);
+            rslt = dev->write(dev->dev_id, reg_addr[0], temp_buff, temp_len, dev->ctx);
 
             /* Check for communication error */
             if (rslt != BME280_OK)
@@ -644,7 +644,7 @@ int8_t bme280_soft_reset(const struct bme280_dev *dev)
             do
             {
                 /* As per data sheet - Table 1, startup time is 2 ms. */
-                dev->delay_ms(2);
+                dev->delay_ms(2, dev->ctx);
                 rslt = bme280_get_regs(BME280_STATUS_REG_ADDR, &status_reg, 1, dev);
             } while ((rslt == BME280_OK) && (try_run--) && (status_reg & BME280_STATUS_IM_UPDATE));
 

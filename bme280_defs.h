@@ -92,7 +92,7 @@
 #endif
 
 /********************************************************/
-
+#define BME280_64BIT_ENABLE
 #ifndef BME280_64BIT_ENABLE /* Check if 64-bit integer (using BME280_64BIT_ENABLE) is enabled */
 #ifndef BME280_32BIT_ENABLE /* Check if 32-bit integer (using BME280_32BIT_ENABLE) is enabled */
 #ifndef BME280_FLOAT_ENABLE /* If any of the integer data types not enabled then enable BME280_FLOAT_ENABLE */
@@ -249,8 +249,8 @@ enum bme280_intf {
 /*!
  * @brief Type definitions
  */
-typedef int8_t (*bme280_com_fptr_t)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
-typedef void (*bme280_delay_fptr_t)(uint32_t period);
+typedef int8_t (*bme280_com_fptr_t)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len, void* ctx);
+typedef void (*bme280_delay_fptr_t)(uint32_t period,void* ctx);
 
 /*!
  * @brief Calibration data
@@ -358,6 +358,8 @@ struct bme280_settings
  */
 struct bme280_dev
 {
+    //c++ ctx
+    void* ctx;
     /*! Chip Id */
     uint8_t chip_id;
 
